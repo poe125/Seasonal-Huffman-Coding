@@ -74,82 +74,96 @@ def make_shared_table(temp_freq, humd_freq):
     return huffman_table, humd_huffman_table
 
 def return_unweighted_huffman_table(df_list):
-    all_temp_bins = []
-    all_humd_bins = []
+    temp_bins, humd_bins = get_bins(df_list)
 
-    for df in df_list:
-        temp_bins, humd_bins = get_bins(df)
-        all_temp_bins.extend(temp_bins)
-        all_humd_bins.extend(humd_bins)
+    combined_df = pd.concat(df_list, ignore_index=True)
+    temp_bins_series = pd.cut(combined_df['気温(℃)'], bins=temp_bins, right=False)
+    humd_bins_series = pd.cut(combined_df['相対湿度(％)'], bins=humd_bins, right=False)
 
     # 重みなし頻度計算
-    temp_freq_series = pd.Series(all_temp_bins).value_counts().sort_index()
-    humd_freq_series = pd.Series(all_humd_bins).value_counts().sort_index()
-    
-    # print('temp freq series (unweighted):\n', temp_freq_series)
+    temp_freq = temp_bins_series.value_counts().sort_index()
+    humd_freq = humd_bins_series.value_counts().sort_index()
 
     # 共通テーブル生成
-    temp_huffman_table, humd_huffman_table = make_shared_table(temp_freq_series, humd_freq_series)
+    temp_huffman_table, humd_huffman_table = make_shared_table(temp_freq, humd_freq)
 
     return temp_huffman_table, humd_huffman_table
-
 
 def return_huffman_table(df_list):
     all_temp_freq = {}
     all_humd_freq = {}
-    coef = [[1.36340201, 0.1514873]]
-    intercept =[-39.16394441]
-    for df in df_list:
-        temp_bins, humd_bins = get_bins(df)
 
-        # 洪水確率に基づく重みを計算
+    coef = [[0.79935496, 0.45529708]]
+    intercept = [-57.14600964]
+
+    # bin定義（昇順・重複なしが前提）
+    temp_bins, humd_bins = get_bins(df_list)
+
+    for df in df_list:
+        # 気温と湿度をbinに分類
+        temp_bins_series = pd.cut(df['気温(℃)'], bins=temp_bins, right=False)
+        humd_bins_series = pd.cut(df['相対湿度(％)'], bins=humd_bins, right=False)
+
+        # 重み（洪水確率による）を計算
         weights = df.apply(
             lambda row: 2 if flood_probability(row['気温(℃)'], row['相対湿度(％)'], coef, intercept) >= 0.9 else 1,
             axis=1
         )
 
-        temp_bins_series = pd.Series(temp_bins.values, index=df.index)
-        humd_bins_series = pd.Series(humd_bins.values, index=df.index)
+        # temp/humd bin ごとに重みの合計を集計
+        temp_freq = temp_bins_series.groupby(temp_bins_series, observed=False).apply(
+            lambda grp: weights.loc[grp.index].sum()
+        )
+        humd_freq = humd_bins_series.groupby(humd_bins_series, observed=False).apply(
+            lambda grp: weights.loc[grp.index].sum()
+        )
 
-        # temp/humd ごとにグループ化して重み付き頻度を集計
-        temp_freq = temp_bins_series.groupby(temp_bins_series, observed=False).apply(lambda grp: weights[grp.index].sum())
-        humd_freq = humd_bins_series.groupby(humd_bins_series, observed=False).apply(lambda grp: weights[grp.index].sum())
-
-        # 全体に加算
+        # 全データ分をマージ
         for k, v in temp_freq.items():
             all_temp_freq[k] = all_temp_freq.get(k, 0) + v
         for k, v in humd_freq.items():
             all_humd_freq[k] = all_humd_freq.get(k, 0) + v
 
-    # Series に変換してソート
+    # pandas.Seriesに変換してインデックスでソート
     temp_freq_series = pd.Series(all_temp_freq).sort_index()
     humd_freq_series = pd.Series(all_humd_freq).sort_index()
-    
-    # print('temp freq series:\n',temp_freq_series)
 
-    # 共通テーブルを生成
+    # ハフマン符号テーブル生成
     temp_huffman_table, humd_huffman_table = make_shared_table(temp_freq_series, humd_freq_series)
+
+    # 1. flood確率を全部出力
+    probs = []
+    for df in df_list:
+        probs.extend([
+            flood_probability(row['気温(℃)'], row['相対湿度(％)'], coef, intercept)
+            for _, row in df.iterrows()
+        ])
+
+    probs = np.array(probs)
+    print("Flood probability max:", probs.max())
+    print("Flood probability min:", probs.min())
+    print("Flood probability >= 0.9:", (probs >= 0.9).sum(), "/", len(probs))
 
     return temp_huffman_table, humd_huffman_table
 
-def get_bins(df):
+def get_bins(df_list):
+    combined_df = pd.concat(df_list, ignore_index=True)
+
     nbins = 5 
-    min_temp = int(df['気温(℃)'].min() - 5)
-    max_temp = int(df['気温(℃)'].max() + 6)
-    min_humd = max(0, int(df['相対湿度(％)'].min() - 20))
+    min_temp = int(combined_df['気温(℃)'].min() - 5)
+    max_temp = int(combined_df['気温(℃)'].max() + 6)
+    min_humd = max(0, int(combined_df['相対湿度(％)'].min() - 20))
     max_humd = 100
 
     temp_bins_range = np.linspace(min_temp, max_temp, nbins + 1)
     humd_bins_range = np.linspace(min_humd, max_humd, nbins + 1)
 
-    # 温度と湿度のヒストグラムを作成し、頻度分布を計算
-    temperature_bins = pd.cut(df['気温(℃)'], bins=temp_bins_range)
-    humidity_bins = pd.cut((df['相対湿度(％)']), bins=humd_bins_range)
-    
-    print('temp bins\n', temperature_bins)
-    print('humd bins\n', humidity_bins)
-    
-    return temperature_bins, humidity_bins
+    # print確認用
+    print('temp bin range:', temp_bins_range)
+    print('humd bin range:', humd_bins_range)
+
+    return temp_bins_range, humd_bins_range
+
 
 def make_table(freq):
     nodes = []
@@ -274,6 +288,7 @@ def encode_critical_data(df, temp_table, humd_table, coef, intercept, output_fil
             
     temp_table.clear()
     humd_table.clear()
+    print('出力完了：', output_file_path)
 
 
 
