@@ -125,21 +125,25 @@ def main():
     
     
     #--------------------ALLSEASON-------------------------#
-    encode_critical_data(df_test_summer,huffman_temp_table_allseasonw,huffman_humd_table_allseasonw,
-    coef,intercept,output_file_path="output/allseason_huffman_weighed/summer.txt")
-    encode_critical_data(df_test_summer,huffman_temp_table_allseason,huffman_humd_table_allseason,
-    coef,intercept,output_file_path="output/allseason_huffman_unweighed/summer.txt") 
-    
+    print("Spring: all season")
     encode_critical_data(df_test_spring,huffman_temp_table_allseasonw,huffman_humd_table_allseasonw,
     coef,intercept,output_file_path="output/allseason_huffman_weighed/spring.txt")
     encode_critical_data(df_test_spring,huffman_temp_table_allseason,huffman_humd_table_allseason,
     coef,intercept,output_file_path="output/allseason_huffman_unweighed/spring.txt") 
     
+    print("summer: all season") 
+    encode_critical_data(df_test_summer,huffman_temp_table_allseasonw,huffman_humd_table_allseasonw,
+    coef,intercept,output_file_path="output/allseason_huffman_weighed/summer.txt")
+    encode_critical_data(df_test_summer,huffman_temp_table_allseason,huffman_humd_table_allseason,
+    coef,intercept,output_file_path="output/allseason_huffman_unweighed/summer.txt") 
+    
+    print("fall: all season")
     encode_critical_data(df_test_fall,huffman_temp_table_allseasonw,huffman_humd_table_allseasonw,
     coef,intercept,output_file_path="output/allseason_huffman_weighed/fall.txt")
     encode_critical_data(df_test_fall,huffman_temp_table_allseason,huffman_humd_table_allseason,
     coef,intercept,output_file_path="output/allseason_huffman_unweighed/fall.txt") 
     
+    print("winter: all season")
     encode_critical_data(df_test_winter,huffman_temp_table_allseasonw,huffman_humd_table_allseasonw,
     coef,intercept,output_file_path="output/allseason_huffman_weighed/winter.txt")
     encode_critical_data(df_test_winter,huffman_temp_table_allseason,huffman_humd_table_allseason,

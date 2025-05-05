@@ -286,8 +286,6 @@ def encode_critical_data(df, temp_table, humd_table, coef, intercept, output_fil
         if buffer:
             output_file.write(buffer + '\n')
             
-    temp_table.clear()
-    humd_table.clear()
     print('出力完了：', output_file_path)
 
 
