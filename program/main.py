@@ -126,48 +126,63 @@ def main():
     
     #--------------------ALLSEASON-------------------------#
     encode_critical_data(df_test_summer,huffman_temp_table_allseasonw,huffman_humd_table_allseasonw,
-    coef,intercept,output_file_path="output/huffman_weighted_allseason.txt")
+    coef,intercept,output_file_path="output/allseason_huffman_weighed/summer.txt")
     encode_critical_data(df_test_summer,huffman_temp_table_allseason,huffman_humd_table_allseason,
-    coef,intercept,output_file_path="output/huffman_unweighted_allseason.txt") 
+    coef,intercept,output_file_path="output/allseason_huffman_unweighed/summer.txt") 
+    
+    encode_critical_data(df_test_spring,huffman_temp_table_allseasonw,huffman_humd_table_allseasonw,
+    coef,intercept,output_file_path="output/allseason_huffman_weighed/spring.txt")
+    encode_critical_data(df_test_spring,huffman_temp_table_allseason,huffman_humd_table_allseason,
+    coef,intercept,output_file_path="output/allseason_huffman_unweighed/spring.txt") 
+    
+    encode_critical_data(df_test_fall,huffman_temp_table_allseasonw,huffman_humd_table_allseasonw,
+    coef,intercept,output_file_path="output/allseason_huffman_weighed/fall.txt")
+    encode_critical_data(df_test_fall,huffman_temp_table_allseason,huffman_humd_table_allseason,
+    coef,intercept,output_file_path="output/allseason_huffman_unweighed/fall.txt") 
+    
+    encode_critical_data(df_test_winter,huffman_temp_table_allseasonw,huffman_humd_table_allseasonw,
+    coef,intercept,output_file_path="output/allseason_huffman_weighed/winter.txt")
+    encode_critical_data(df_test_winter,huffman_temp_table_allseason,huffman_humd_table_allseason,
+    coef,intercept,output_file_path="output/allseason_huffman_unweighed/winter.txt") 
     
     #---------------------------SPRING----------------------------#
     encode_critical_data(df_test_spring,huffman_temp_table_springw,huffman_humd_table_springw,
-    coef,intercept,output_file_path="output/huffman_weighted_spring.txt")
+    coef,intercept,output_file_path="output/huffman_weighed/spring.txt")
     encode_critical_data(df_test_spring,huffman_temp_table_spring,huffman_humd_table_spring,
-    coef,intercept,output_file_path="output/huffman_unweighted_spring.txt")
+    coef,intercept,output_file_path="output/huffman_unweighed/spring.txt")
     
     # 無圧縮2進数形式データ出力
-    output_path = 'output/uncompressed_if_flood_spring.txt'
+    output_path = 'output/uncompressed/spring.txt'
     export_raw_binary_if_flood(df_test_spring, output_path, coef, intercept)
     
     #--------------------------SUMMER--------------------#
     encode_critical_data(df_test_summer,huffman_temp_table_summerw,huffman_humd_table_summerw,
-    coef,intercept,output_file_path="output/huffman_weighted_summer.txt")
+    coef,intercept,output_file_path="output/huffman_weighed/summer.txt")
     encode_critical_data(df_test_summer,huffman_temp_table_summer,huffman_humd_table_summer,
-    coef,intercept,output_file_path="output/huffman_unweighted_summer.txt")
+    coef,intercept,output_file_path="output/huffman_unweighed/summer.txt")
     
     # 無圧縮2進数形式データ出力
-    output_path = 'output/uncompressed_if_flood_summer.txt'
+    output_path = 'output/uncompressed/summer.txt'
     export_raw_binary_if_flood(df_test_summer, output_path, coef, intercept)
     
     #--------------------------FALL--------------------#
     encode_critical_data(df_test_fall,huffman_temp_table_fallw,huffman_humd_table_fallw,
-    coef,intercept,output_file_path="output/huffman_weighted_fall.txt")
+    coef,intercept,output_file_path="output/huffman_weighed/fall.txt")
     encode_critical_data(df_test_fall,huffman_temp_table_fall,huffman_humd_table_fall,
-    coef,intercept,output_file_path="output/huffman_unweighted_fall.txt")
+    coef,intercept,output_file_path="output/huffman_unweighed/fall.txt")
     
     # 無圧縮2進数形式データ出力
-    output_path = 'output/uncompressed_if_flood_fall.txt'
+    output_path = 'output/uncompressed/fall.txt'
     export_raw_binary_if_flood(df_test_fall, output_path, coef, intercept)
     
     #--------------------------WINTER--------------------#
     encode_critical_data(df_test_winter,huffman_temp_table_winterw,huffman_humd_table_winterw,
-    coef,intercept,output_file_path="output/huffman_weighted_winter.txt")
+    coef,intercept,output_file_path="output/huffman_weighed/winter.txt")
     encode_critical_data(df_test_winter,huffman_temp_table_winter,huffman_humd_table_winter,
-    coef,intercept,output_file_path="output/huffman_unweighted_winter.txt")
+    coef,intercept,output_file_path="output/huffman_unweighed/winter.txt")
     
     # 無圧縮2進数形式データ出力
-    output_path = 'output/uncompressed_if_flood_winter.txt'
+    output_path = 'output/uncompressed/winter.txt'
     export_raw_binary_if_flood(df_test_winter, output_path, coef, intercept)
 
 main()
