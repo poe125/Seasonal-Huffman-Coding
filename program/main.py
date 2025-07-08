@@ -11,12 +11,12 @@ file_paths_spring_table = [path for path in glob.glob("data/spring/*.csv") if os
 file_paths_summer_table = [path for path in glob.glob("data/summer/*.csv") if os.path.isfile(path)]
 file_paths_fall_table = [path for path in glob.glob("data/fall/*.csv") if os.path.isfile(path)]
 file_paths_winter_table = [path for path in glob.glob("data/winter/*.csv") if os.path.isfile(path)]
-file_paths_allseason_table = [path for path in glob.glob("data/all_season/*.csv") if os.path.isfile(path)]
+file_paths_allseason_table = [path for path in glob.glob("data/*/*.csv") if os.path.isfile(path)]
 
-file_path_test_spring = "data/spring/nago_data.csv"
-file_path_test_summer = "data/summer/suzu_data.csv"
-file_path_test_fall = "data/fall/hikone_data.csv"
-file_path_test_winter = "data/winter/nagoya_data.csv"
+file_path_test_spring = "data/has_flood/nago_data.csv"
+file_path_test_summer = "data/has_flood/suzu_data.csv"
+file_path_test_fall = "data/has_flood/hikone_data.csv"
+file_path_test_winter = "data/has_flood/nagoya_data.csv"
 
 df_list_spring_table = []
 df_list_summer_table = []

@@ -255,6 +255,7 @@ def encode_critical_data(df, temp_table, humd_table, coef, intercept, output_fil
 
     buffer = ""  # ビット列を貯めておく
     writing = False  # 書き込み中かどうか
+    line_count = 0 
 
     with open(output_file_path, 'w', encoding='utf-8') as output_file:
         for _, row in df.iterrows():
@@ -274,19 +275,23 @@ def encode_critical_data(df, temp_table, humd_table, coef, intercept, output_fil
                     while len(buffer) >= 88:
                         output_file.write(buffer[:88] + '\n')
                         buffer = buffer[88:]
+                        line_count += 1
 
             elif writing:
                 # 書き込み中にflood_probが閾値以下になったら改行してリセット
                 if buffer:
                     output_file.write(buffer + '\n')
+                    line_count += 1
                 buffer = ""
                 writing = False
 
         # 最後にバッファが残っていれば書き出す
         if buffer:
             output_file.write(buffer + '\n')
+            line_count += 1
             
     print('出力完了：', output_file_path)
+    print('改行回数:', line_count)
 
 
 
