@@ -1,8 +1,7 @@
-# compsafe\_2025
-
+# About
 This repository contains the implementation of seasonal Huffman coding, a data compression method designed for efficiently sending flood data through LoRaWAN. While the primary use case is flood data, the methods can be applied to other types of data compression as well.
 
-These codes were used for the paper submitted to COMPSAFE 2025.
+These codes were used for the paper submitted to **COMPSAFE 2025**.
 
 # Usage
 1. Create Huffman Tree:
